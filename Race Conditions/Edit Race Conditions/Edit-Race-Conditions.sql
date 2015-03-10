@@ -17,15 +17,15 @@ SET NOCOUNT ON	-- Report only errors
 -- Drops
 -- --------------------------------------------------------------------------------
 IF OBJECT_ID( 'TScheduledRouteDrivers' )				IS NOT NULL DROP TABLE TScheduledRouteDrivers
-IF OBJECT_ID( 'TDriverRoles' )							IS NOT NULL DROP TABLE TDriverRoles
-IF OBJECT_ID( 'TScheduledRoutes' )						IS NOT NULL DROP TABLE TScheduledRoutes
-IF OBJECT_ID( 'TScheduledTimes' )						IS NOT NULL DROP TABLE TScheduledTimes
-IF OBJECT_ID( 'TDrivers' )								IS NOT NULL DROP TABLE TDrivers
-IF OBJECT_ID( 'TBuses' )								IS NOT NULL DROP TABLE TBuses
-IF OBJECT_ID( 'TRoutes' )								IS NOT NULL DROP TABLE TRoutes
+IF OBJECT_ID( 'TDriverRoles' )						IS NOT NULL DROP TABLE TDriverRoles
+IF OBJECT_ID( 'TScheduledRoutes' )					IS NOT NULL DROP TABLE TScheduledRoutes
+IF OBJECT_ID( 'TScheduledTimes' )					IS NOT NULL DROP TABLE TScheduledTimes
+IF OBJECT_ID( 'TDrivers' )						IS NOT NULL DROP TABLE TDrivers
+IF OBJECT_ID( 'TBuses' )						IS NOT NULL DROP TABLE TBuses
+IF OBJECT_ID( 'TRoutes' )						IS NOT NULL DROP TABLE TRoutes
 
-IF OBJECT_ID( 'uspEditRoute' )							IS NOT NULL DROP PROCEDURE uspEditRoute
-IF OBJECT_ID( 'uspEditDriver' )							IS NOT NULL DROP PROCEDURE uspEditDriver
+IF OBJECT_ID( 'uspEditRoute' )						IS NOT NULL DROP PROCEDURE uspEditRoute
+IF OBJECT_ID( 'uspEditDriver' )						IS NOT NULL DROP PROCEDURE uspEditDriver
 IF OBJECT_ID( 'uspEditScheduledRoute' )					IS NOT NULL DROP PROCEDURE uspEditScheduledRoute
 IF OBJECT_ID( 'uspMoveScheduledRoute' )					IS NOT NULL DROP PROCEDURE uspMoveScheduledRoute
 IF OBJECT_ID( 'uspSuperEditScheduleRoute' )				IS NOT NULL DROP PROCEDURE uspSuperEditScheduleRoute
@@ -37,17 +37,17 @@ IF OBJECT_ID( 'uspSuperEditScheduleRoute' )				IS NOT NULL DROP PROCEDURE uspSup
 -- --------------------------------------------------------------------------------
 CREATE TABLE TRoutes
 (
-	 intRouteID					INTEGER			NOT NULL
-	,strRoute					VARCHAR(50)		NOT NULL
-	,strRouteDescription		VARCHAR(50)		NOT NULL
+	 intRouteID				INTEGER			NOT NULL
+	,strRoute				VARCHAR(50)		NOT NULL
+	,strRouteDescription			VARCHAR(50)		NOT NULL
 	,rvLastUpdated				ROWVERSION		NOT NULL
 	,CONSTRAINT TRoutes_PK PRIMARY KEY ( intRouteID )
 )
 
 CREATE TABLE TBuses
 (
-	 intBusID					INTEGER			NOT NULL
-	,strBus						VARCHAR(50)		NOT NULL
+	 intBusID				INTEGER			NOT NULL
+	,strBus					VARCHAR(50)		NOT NULL
 	,intCapacity				INTEGER			NOT NULL
 	,CONSTRAINT TBuses_PK PRIMARY KEY ( intBusID )
 )
@@ -72,8 +72,8 @@ CREATE TABLE TScheduledTimes
 CREATE TABLE TScheduledRoutes
 (
 	 intScheduledTimeID			INTEGER			NOT NULL
-	,intRouteID					INTEGER			NOT NULL
-	,intBusID					INTEGER			NOT NULL
+	,intRouteID				INTEGER			NOT NULL
+	,intBusID				INTEGER			NOT NULL
 	,rvLastUpdated				ROWVERSION		NOT NULL
 	,CONSTRAINT TScheduledRoutes_PK PRIMARY KEY ( intScheduledTimeID, intRouteID )
 )
@@ -89,7 +89,7 @@ CREATE TABLE TDriverRoles
 CREATE TABLE TScheduledRouteDrivers
 (
 	 intScheduledTimeID			INTEGER			NOT NULL
-	,intRouteID					INTEGER			NOT NULL
+	,intRouteID				INTEGER			NOT NULL
 	,intDriverID				INTEGER			NOT NULL
 	,intDriverRoleID			INTEGER			NOT NULL
 	,CONSTRAINT TScheduledRouteDrivers_PK PRIMARY KEY ( intScheduledTimeID, intRouteID, intDriverID )
@@ -100,13 +100,13 @@ CREATE TABLE TScheduledRouteDrivers
 -- --------------------------------------------------------------------------------
 -- Step #2: Identify and Create Foreign Keys
 -- --------------------------------------------------------------------------------
---#		Child						Parent					Column(s)
---		------						-------					---------
---1		TScheduledRoutes			TScheduledTimes			intScheduledTimeID								
---2		TScheduledRoutes			TRoutes					intRouteID
---3		TScheduledRoutes			TBuses					intBusID
+--#		Child				Parent				Column(s)
+--		------				-------				---------
+--1		TScheduledRoutes		TScheduledTimes			intScheduledTimeID								
+--2		TScheduledRoutes		TRoutes				intRouteID
+--3		TScheduledRoutes		TBuses				intBusID
 --4		TScheduledRouteDrivers		TScheduledRoutes		intScheduledTimeID, intRouteID
---5		TScheduledRouteDrivers		TDrivers				intDriverID
+--5		TScheduledRouteDrivers		TDrivers			intDriverID
 --6		TScheduledRouteDrivers		TDriverRoles			intDriverRoleID
 
 --1
@@ -153,37 +153,37 @@ UNIQUE ( intScheduledTimeID, intDriverID )
 -- --------------------------------------------------------------------------------
 INSERT INTO TRoutes( intRouteID, strRoute, strRouteDescription )
 VALUES	 ( 1, 'R50', 'Milford to Downtown' )
-		,( 2, 'R00', 'Hyde Park to Mason' )
+	,( 2, 'R00', 'Hyde Park to Mason' )
 
 INSERT INTO TBuses( intBusID, strBus, intCapacity )
 VALUES	 ( 1, 'Bus X', 30 )
-		,( 2, 'Bus Y', 40 )
-		,( 3, 'Bus Z', 25 )
+	,( 2, 'Bus Y', 40 )
+	,( 3, 'Bus Z', 25 )
 
 INSERT INTO TDrivers( intDriverID, strFirstName, strLastName, strPhoneNumber )
 VALUES	 ( 1, 'Han', 'Solo', '111-1111' )
-		,( 2, 'Talon', 'Karrde', '222-2222' )
-		,( 3, 'Mara', 'Jade', '333-3333' )
+	,( 2, 'Talon', 'Karrde', '222-2222' )
+	,( 3, 'Mara', 'Jade', '333-3333' )
 
 INSERT INTO TDriverRoles( intDriverRoleID, strDriverRole, intSortOrder )
 VALUES	 ( 1, 'Primary Driver', 1 )
-		,( 2, 'Backup Driver #1', 2 )
-		,( 3, 'Backup Driver #2', 3 )
+	,( 2, 'Backup Driver #1', 2 )
+	,( 3, 'Backup Driver #2', 3 )
 		
 INSERT INTO TScheduledTimes( intScheduledTimeID, strScheduledTime )
 VALUES	 ( 1, '9AM' )
-		,( 2, '11AM' )
-		,( 3, '1PM' )
-		,( 4, '4PM' )
-		,( 5, '6PM' )
+	,( 2, '11AM' )
+	,( 3, '1PM' )
+	,( 4, '4PM' )
+	,( 5, '6PM' )
 		
 INSERT INTO TScheduledRoutes( intScheduledTimeID, intRouteID, intBusID )
 VALUES	 ( 1, 1, 1 )
-		,( 2, 2, 2 )
+	,( 2, 2, 2 )
 
 INSERT INTO TScheduledRouteDrivers( intScheduledTimeID, intRouteID, intDriverID, intDriverRoleID )
 VALUES	 ( 1, 1, 1, 1 )
-		,( 2, 2, 2, 1 ) 
+	,( 2, 2, 2, 1 ) 
 
 
 		
@@ -194,8 +194,8 @@ GO
 
 CREATE PROCEDURE uspEditRoute
 	 @intRouteID			AS INTEGER
-	,@strRoute				AS VARCHAR(50)
-	,@strRouteDescription	AS VARCHAR(50)
+	,@strRoute			AS VARCHAR(50)
+	,@strRouteDescription		AS VARCHAR(50)
 	,@rvLastUpdated			AS ROWVERSION
 AS
 SET NOCOUNT ON		-- Report only errors
@@ -207,10 +207,10 @@ DECLARE @blnRaceConditionExists AS BIT = 1	-- Assume there is a race condition
 UPDATE
 	TRoutes
 SET
-	 strRoute				= @strRoute
-	,strRouteDescription	= @strRouteDescription
+	 strRoute			= @strRoute
+	,strRouteDescription		= @strRouteDescription
 WHERE
-		intRouteID			= @intRouteID
+		intRouteID		= @intRouteID
 	AND	rvLastUpdated		= @rvLastUpdated 
 
 -- Was the row updated?
@@ -231,14 +231,14 @@ GO
 -- --------------------------------------------------------------------------------
 SELECT 'call uspEditRoute' AS 'Step #5'
 
-DECLARE @strRoute				AS VARCHAR( 50 )
-DECLARE @strRouteDescription	AS VARCHAR( 50 )
+DECLARE @strRoute			AS VARCHAR( 50 )
+DECLARE @strRouteDescription		AS VARCHAR( 50 )
 DECLARE @rvLastUpdated			AS ROWVERSION
 
 -- Simulate loading data from database onto form
 SELECT
-	 @strRoute				= strRoute
-	,@strRouteDescription	= strRouteDescription
+	 @strRoute			= strRoute
+	,@strRouteDescription		= strRouteDescription
 	,@rvLastUpdated			= rvLastUpdated
 FROM
 	TRoutes
@@ -246,7 +246,7 @@ WHERE
 	intRouteID	= 1	-- Hard code for curling/whatever Route
 
 -- Simulate a delay during which the user would change the fields on the form
-WAITFOR DELAY '00:00:03'	-- hh:mm:ss – change to whatever you need
+WAITFOR DELAY '00:00:03'	-- hh:mm:ss Â– change to whatever you need
 SELECT @strRouteDescription = 'Kenwood to Downtown'
 
 -- Simulate clicking OK on the edit form and attempt to save data by calling USP
@@ -260,14 +260,14 @@ SELECT * FROM TRoutes WHERE intRouteID = 1	-- Verify change.
 -- --------------------------------------------------------------------------------
 -- Step #6: Call and test uspEditRoute with another copy of SQL Server
 -- --------------------------------------------------------------------------------
---DECLARE @strRoute				AS VARCHAR( 50 )
---DECLARE @strRouteDescription	AS VARCHAR( 50 )
---DECLARE @rvLastUpdated			AS ROWVERSION
+--DECLARE @strRoute			AS VARCHAR( 50 )
+--DECLARE @strRouteDescription		AS VARCHAR( 50 )
+--DECLARE @rvLastUpdated		AS ROWVERSION
 
 ---- Simulate loading data from database onto form
 --SELECT
---	 @strRoute				= strRoute
---	,@strRouteDescription	= strRouteDescription
+--	 @strRoute			= strRoute
+--	,@strRouteDescription		= strRouteDescription
 --	,@rvLastUpdated			= rvLastUpdated
 --FROM
 --	TRoutes
@@ -275,7 +275,7 @@ SELECT * FROM TRoutes WHERE intRouteID = 1	-- Verify change.
 --	intRouteID	= 1	-- Hard code for curling/whatever Route
 
 ---- Simulate a delay during which the user would change the fields on the form
---WAITFOR DELAY '00:00:03'	-- hh:mm:ss – change to whatever you need
+--WAITFOR DELAY '00:00:03'	-- hh:mm:ss Â– change to whatever you need
 --SELECT @strRouteDescription = 'Kenwood to Downtown'
 
 ---- Simulate clicking OK on the edit form and attempt to save data by calling USP
@@ -318,7 +318,7 @@ SET
 	,strLastName			= @strLastName
 	,strPhoneNumber			= @strPhoneNumber
 WHERE
-		intDriverID			= @intDriverID
+		intDriverID		= @intDriverID
 	AND	rvLastUpdated		= @rvLastUpdated 
 
 -- Was the row updated?
@@ -356,7 +356,7 @@ WHERE
 	intDriverID	= 1	-- Hard code for driver
 
 -- Simulate a delay during which the user would change the fields on the form
-WAITFOR DELAY '00:00:03'	-- hh:mm:ss – change to whatever you need
+WAITFOR DELAY '00:00:03'	-- hh:mm:ss Â– change to whatever you need
 SELECT @strLastName = 'Calrissian'
 
 -- Simulate clicking OK on the edit form and attempt to save data by calling USP
@@ -372,8 +372,8 @@ SELECT * FROM TDrivers WHERE intDriverID = 1	-- Verify change.
 -- --------------------------------------------------------------------------------
 --DECLARE @strFirstName			AS VARCHAR( 50 )
 --DECLARE @strLastName			AS VARCHAR( 50 )
---DECLARE @strPhoneNumber			AS VARCHAR( 50 )
---DECLARE @rvLastUpdated			AS ROWVERSION
+--DECLARE @strPhoneNumber		AS VARCHAR( 50 )
+--DECLARE @rvLastUpdated		AS ROWVERSION
 
 ---- Simulate loading data from database onto form
 --SELECT
@@ -387,7 +387,7 @@ SELECT * FROM TDrivers WHERE intDriverID = 1	-- Verify change.
 --	intDriverID	= 1	-- Hard code for driver
 
 ---- Simulate a delay during which the user would change the fields on the form
---WAITFOR DELAY '00:00:03'	-- hh:mm:ss – change to whatever you need
+--WAITFOR DELAY '00:00:03'	-- hh:mm:ss Â– change to whatever you need
 --SELECT @strLastName = 'Calrissian'
 
 ---- Simulate clicking OK on the edit form and attempt to save data by calling USP
@@ -411,11 +411,11 @@ GO
 
 CREATE PROCEDURE uspEditScheduledRoute
 	 @intOldScheduledTimeID		AS INTEGER
-	,@intOldRouteID				AS INTEGER
+	,@intOldRouteID			AS INTEGER
 	,@intNewScheduledTimeID		AS INTEGER
-	,@intNewRouteID				AS INTEGER
-	,@intNewBusID				AS INTEGER
-	,@rvLastUpdated				AS ROWVERSION
+	,@intNewRouteID			AS INTEGER
+	,@intNewBusID			AS INTEGER
+	,@rvLastUpdated			AS ROWVERSION
 AS
 SET NOCOUNT ON		-- Report only errors
 SET XACT_ABORT ON	-- Terminate and rollback entire transaction on error
@@ -427,12 +427,12 @@ UPDATE
 	TScheduledRoutes
 SET
 	 intBusID			= @intNewBusID
-	,intScheduledTimeID = @intNewScheduledTimeID
+	,intScheduledTimeID 		= @intNewScheduledTimeID
 	,intRouteID			= @intNewRouteID
 WHERE
-	intScheduledTimeID  = @intOldScheduledTimeID
-	AND intRouteID		= @intOldRouteID
-	AND rvLastUpdated	= @rvLastUpdated 
+	intScheduledTimeID  		= @intOldScheduledTimeID
+	AND intRouteID			= @intOldRouteID
+	AND rvLastUpdated		= @rvLastUpdated 
 
 -- Was the row updated?
 IF @@ROWCOUNT = 1
@@ -490,11 +490,11 @@ GO
 
 CREATE PROCEDURE uspMoveScheduledRoute
 	 @intOldScheduledTimeID		AS INTEGER
-	,@intOldRouteID				AS INTEGER
+	,@intOldRouteID			AS INTEGER
 	,@intNewScheduledTimeID		AS INTEGER
-	,@intNewRouteID				AS INTEGER
-	,@intBusID					AS INTEGER
-	,@blnResult					AS BIT OUTPUT
+	,@intNewRouteID			AS INTEGER
+	,@intBusID			AS INTEGER
+	,@blnResult			AS BIT OUTPUT
 AS
 SET NOCOUNT ON		-- Report only errors
 SET XACT_ABORT ON	-- Terminate and rollback entire transaction on error
@@ -508,8 +508,8 @@ BEGIN TRANSACTION
 		@blnAlreadyExists = 1
 	FROM
 		TScheduledRoutes (TABLOCKX)			-- Lock table until end of transaction
-	WHERE 	intScheduledTimeID	=	@intNewScheduledTimeID
-		AND	intRouteID			=	@intNewRouteID
+	WHERE 	intScheduledTimeID	= @intNewScheduledTimeID
+		AND	intRouteID	= @intNewRouteID
 
 	IF @blnAlreadyExists = 0 
 	BEGIN
@@ -528,15 +528,15 @@ BEGIN TRANSACTION
 				  FROM 
 					TScheduledRouteDrivers	
 				  WHERE
-						intScheduledTimeID = @intOldScheduledTimeID
-					AND intRouteID		   = @intOldRouteID)
+						intScheduledTimeID 	= @intOldScheduledTimeID
+					AND 	intRouteID		= @intOldRouteID)
 				,(SELECT 
 					intDriverRoleID 
 				  FROM 
 					TScheduledRouteDrivers	
 				  WHERE
-						intScheduledTimeID = @intOldScheduledTimeID
-					AND intRouteID		   = @intOldRouteID)
+						intScheduledTimeID 	= @intOldScheduledTimeID
+					AND 	intRouteID		= @intOldRouteID)
 			)
 
 	-- Delete Old Records
@@ -565,10 +565,10 @@ GO
 
 CREATE PROCEDURE uspSuperEditScheduleRoute
 	 @intOldScheduledTimeID		AS INTEGER
-	,@intOldRouteID				AS INTEGER
+	,@intOldRouteID			AS INTEGER
 	,@intNewScheduledTimeID		AS INTEGER
-	,@intNewRouteID				AS INTEGER
-	,@intBusID					AS INTEGER
+	,@intNewRouteID			AS INTEGER
+	,@intBusID			AS INTEGER
 AS
 SET NOCOUNT ON		-- Report only errors
 SET XACT_ABORT ON	-- Terminate and rollback entire transaction on error
@@ -587,9 +587,9 @@ BEGIN
 	UPDATE 
 		TScheduledRoutes
 	SET
-		intBusID = @intBusID
+		intBusID 		= @intBusID
 	WHERE
-		intScheduledTimeID  = @intOldScheduledTimeID
+		intScheduledTimeID  	= @intOldScheduledTimeID
 		AND intRouteID		= @intOldRouteID
 
 	SET @blnResult = 1
